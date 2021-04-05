@@ -41,7 +41,7 @@ Welcome to AutoKernel Docs!
   demo_guides/arm64_cpu
   demo_guides/x86_cpu
   demo_guides/opencl
-  demo_guides/cuda
+  demo_guides/cuda_matmul/cuda
 
 .. toctree::
   :maxdepth: 1
