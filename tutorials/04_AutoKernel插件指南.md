@@ -20,7 +20,7 @@ AutoKernel Plugin做的工作。主要工作包含：
 
 ## 工作流程
 
-![add_op.png](../add_op.png)
+![add_op.png](data/add_op.png)
 
 AutoKernel的工作流程主要分为两个步骤：
 1. 生成：编写算法描述和调度策略，生成相应后端的优化算子代码
