@@ -1,5 +1,5 @@
 # Cuda matmul
-This example shows how to use Halide to run code on a GPU(cuda). Source codes are from [Halide project]((https://github.com/halide/Halide)).
+This example shows how to use Halide to run code on a GPU(cuda). Source codes are from [Halide project](https://github.com/halide/Halide).
 
 
 ## 1. using nvidia-docker
