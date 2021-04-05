@@ -2,11 +2,11 @@
 
 随着AI技术的快速发展，深度学习在各个领域得到了广泛应用。深度学习模型能否成功在终端落地应用，满足产品需求，一个关键的指标就是神经网络模型的推理性能。于是，一大波算法工程师为了算法的部署转岗算子优化工程师。然而，优化代码并不是一件简单的事，它要求工程师既要精通计算机体系架构，又要熟悉算法的计算流程，于是，稍微有经验的深度学习推理优化工程师都成了各家公司争抢的“香饽饽”。人才少，需求多，算子优化自动化是未来的大趋势。  
   
-![automatic.png](https://github.com/Steve-Selite/AutoKernel/blob/main/Picture/Article%20Two/automatic.png?raw=true)  
+![automatic.png](https://github.com/Steve-Selite/autokernel-docs/blob/main/Images/GEMM/automatic.png?raw=true)  
   
 近日，致力于降低优化门槛，提升优化开发效率的算子自动优化工具AutoKernel正式开源了。  
   
-![autokernel.png](https://github.com/Steve-Selite/AutoKernel/blob/main/Picture/Article%20Two/autokernel.png?raw=true)  
+![autokernel.png](https://github.com/Steve-Selite/autokernel-docs/blob/main/Images/GEMM/autokernel.png?raw=true)  
   
 ____
 ### AutoKernel特色  
@@ -19,13 +19,13 @@ _____
 ### GEMM优化教程  
 下面，本教程将带领大家一步步优化矩阵乘法GEMM。无需手工撸代码，编写繁杂冗长的底层汇编代码，只需十几行简洁的调度代码。  
   
-![gemm.jpg](https://github.com/Steve-Selite/AutoKernel/blob/main/Picture/Article%20Two/gemm.jpg?raw=true)  
+![gemm.jpg](https://github.com/Steve-Selite/autokernel-docs/blob/main/Images/GEMM/gemm.jpg?raw=true)  
   
 **两个优化宗旨：**  
 在详细讲解优化步骤前，我们先谈谈优化的本质。我们在谈”优化“的时候，计算机底层做了什么？优化的”瓶颈“是什么？为什么通过一波”优化操作“，性能就能提升呢？AutoKernel使用的Halide是如何实现自动优化的呢？  
 要解答这些疑问，我们需要了解一下硬件的基础的体系结构，了解硬件如何工作，才能在软件上实现算法的时候，尽可能去考虑利用硬件的一些特性，来做到高效的、极致的优化。  
   
-![memory.png](https://github.com/Steve-Selite/AutoKernel/blob/main/Picture/Article%20Two/memory.png?raw=true)  
+![memory.png](https://github.com/Steve-Selite/autokernel-docs/blob/main/Images/GEMM/memory.png?raw=true)  
    
 上图是典型的存储理器层次结构：主存容量大，访问速度慢，寄存器和缓存读取速度快，但容量有限。在寄存器的层级上，CPU可以在一个时钟周期内访问它们，如果CPU去访问外部的DDR的话，延迟是非常大的，大概是200个时钟周期左右。如果CPU去访问cache的话，一般需要6到12个cycle就够了。所以，一个很重要的一个优化宗旨是：**优化内存访问**，充分利用寄存器和高速缓存去存数据。  
 第二个优化宗旨是 **提高并行性** ：充分利用SIMD进行指令向量化和多核心并行。大部分现代CPU支持SIMD（Single Instruction Multiple Data，单指令流多数据流）。在同一个CPU循环中，SIMD可在多个值上同时执行相同的运算/指令。如果我们在4个数据点上进行向量化，一次计算四个数据，理论上就可以实现4倍的加速。
@@ -52,7 +52,7 @@ cd AutoKernel/doc/tutorials/data/
   
 下图展示了在Intel(R) Core(TM) i9-9900K CPU @ 3.60GHz的电脑上的优化效果，无需手工撸代码，无需编写繁杂冗长的底层汇编代码，只需十几行简洁的调度代码, 就能性能优化200+倍。 
    
-![图片1.png](https://github.com/Steve-Selite/AutoKernel/blob/main/Picture/Article%20Two/%E5%9B%BE%E7%89%871.png?raw=true)  
+![图片1.png](https://github.com/Steve-Selite/autokernel-docs/blob/main/Images/GEMM/%E5%9B%BE%E7%89%871.png?raw=true)  
    
 **下面是详细的优化步骤：**  
 **STEP 1**  
@@ -143,7 +143,7 @@ M N K = 640 640 640     err 0.00        [rep 50] autokernel | blas      4.7617 m
 **STEP 6**  
 前面的分块成 16 x 8的小kernel, 这一步先划分成 16 x 32的分块，然后把每个分块再分成 16 x 8的子分块。我们把最外层的两层循环合并到一层，并对这一层进行并行化。这一步计算描述多了一个prod函数来定义子分块的计算，prod函数的计算公式和总的gemm是一样的，我们通过 compute_at指定在 yi维度之下计算prod，则prod计算的是 16x8的小kernel, 大致逻辑如下：   
    
-![step6.png](https://github.com/Steve-Selite/AutoKernel/blob/main/Picture/Article%20Two/step6.png?raw=true)   
+![step6.png](https://github.com/Steve-Selite/autokernel-docs/blob/main/Images/GEMM/step6.png?raw=true)   
    
 **总的代码如下：**   
 ```   
@@ -179,7 +179,7 @@ M N K = 640 640 640     err 0.00        [rep 50] autokernel | blas      3.1824 m
 **STEP 7**  
 这一步添加的操作是对矩阵B进行数据重排，使得在计算小kernel 16x8时，内存读取更顺畅。因为小kernel的x维度是按照16划分的，因此重排数据B的x维度也是按照16重排。   
    
-![interleave.png](https://github.com/Steve-Selite/AutoKernel/blob/main/Picture/Article%20Two/interleave.png?raw=true)   
+![interleave.png](https://github.com/Steve-Selite/autokernel-docs/blob/main/Images/GEMM/interleave.png?raw=true)   
   
 **总的代码如下：**   
 ```   
