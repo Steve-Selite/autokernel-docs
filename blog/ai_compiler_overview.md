@@ -12,7 +12,7 @@
 
 但是，深度学习算法要实现落地应用，必须被部署到硬件上，例如Google的TPU、华为麒麟NPU， 以及其他在FPGA上的架构创新。  
      
-![图片2.png](https://github.com/Steve-Selite/AutoKernal/blob/main/Picture/Article%20One/%E5%9B%BE%E7%89%872.png?raw=true)  
+![图片2.png](https://github.com/Steve-Selite/autokernel-docs/blob/main/Images/Compiler/%E5%9B%BE%E7%89%872.png?raw=true)  
        
 这些各训练框架训练出来的模型要如何部署到不同的终端硬件呢，这就需要深度学习神经网络编译器来解决。  
 
@@ -22,27 +22,27 @@
 LLVM通过模块分为前端，中端（优化）和后端三部分。每当出现新的编程语言，只需要开发相应的前端，将编程语言转换成LLVM的中间表示；类似地，出现新的硬件架构，只需要开发相应的后端，对接上LLVM的中间表示。  
 模块化的划分，避免了因编程语言和CPU架构的翻新而引发的编译器适配性问题，大大简化了编译器的开发工作。
     
-![图片3.png](https://github.com/Steve-Selite/AutoKernal/blob/main/Picture/Article%20One/%E5%9B%BE%E7%89%873.png?raw=true)   
+![图片3.png](https://github.com/Steve-Selite/autokernel-docs/blob/main/Images/Compiler/%E5%9B%BE%E7%89%873.png?raw=true)   
      
 **神经网络编译器：**  
 其输入是深度学习训练框架训练出来的模型定义文件，输出是能够在不同硬件高效执行的代码。  
       
-![图片6.png](https://github.com/Steve-Selite/AutoKernal/blob/main/Picture/Article%20One/%E5%9B%BE%E7%89%876.png?raw=true)  
+![图片6.png](https://github.com/Steve-Selite/autokernel-docs/blob/main/Images/Compiler/%E5%9B%BE%E7%89%876.png?raw=true)  
      
 从上至下由四个层级组成：  
 1. 最上层对接各个深度学习训练框架训练出来的算法模型（Tensorflow, Caffe, Pytorch, Mxnet等）。  
 2. 图层级（High-level IR）：神经网络的结构可以表示成计算图，图层级的操作则是对计算图进行一些和具体硬件和框架无关的操作，比如算子融合，内存分配优化，数据类型和数据维度的推导等。  
       
-![图片4.png](https://github.com/Steve-Selite/AutoKernal/blob/main/Picture/Article%20One/%E5%9B%BE%E7%89%874.png?raw=true)  
+![图片4.png](https://github.com/Steve-Selite/autokernel-docs/blob/main/Images/Compiler/%E5%9B%BE%E7%89%874.png?raw=true)  
 > _我们可通过算子融合的方式，避免中间数据频繁的在寄存器和内存直接来回读写，从而提升整体推理性能。_  
      
-![图片5.png](https://github.com/Steve-Selite/AutoKernal/blob/main/Picture/Article%20One/%E5%9B%BE%E7%89%875.png?raw=true)  
+![图片5.png](https://github.com/Steve-Selite/autokernel-docs/blob/main/Images/Compiler/%E5%9B%BE%E7%89%875.png?raw=true)  
 > _Nividia通过把conv, bn, relu这三个算子融合成一个算子 fuse- CBR. 实现了三倍的推理性能提升。_  
      
 3.  算子层级（operator level/kernel level）算子层级主要是张量计算。为了实现这些计算在硬件上高效实现，发挥芯片的性能，通常硬件芯片配有专门优化的算子计算库，如Intel的MKL, Nvidia的CuDNN, TensorRT。这个层级需要支持每个硬件后端的每个算子实现。  
 4.  各硬件后端：GPU, ARM CPU, X86 CPU, NPU等。  
      
-![图片7.png](https://github.com/Steve-Selite/AutoKernal/blob/main/Picture/Article%20One/%E5%9B%BE%E7%89%877.png?raw=true)  
+![图片7.png](https://github.com/Steve-Selite/autokernel-docs/blob/main/Images/Compiler/%E5%9B%BE%E7%89%877.png?raw=true)  
 >_自深度学习编译器的概念提出以来，各类编译器层出不穷。_  
       
 ___
@@ -63,7 +63,7 @@ TVM全称为Tensor Virtual Machine，属于算子层级，主要用于张量计�
 后面出现的动态图摒弃了传统的计算图先定义，后执行的方式，采用了计算图在运行时定义的模式，这种计算图就称为动态图。  
 第二代TVM 的图计算层变为Relay VM，Relay和第一代的图计算表示NNVM的最主要区别是Relay IR除了支持dataflow（静态图）， 能够更好地解决control flow（动态图）。它不仅是一种计算图的中间表示，也支持自动微分。  
     
-![图片19.png](https://github.com/Steve-Selite/AutoKernal/blob/main/Picture/Article%20One/%E5%9B%BE%E7%89%8719.png?raw=true)  
+![图片19.png](https://github.com/Steve-Selite/autokernel-docs/blob/main/Images/Compiler/%E5%9B%BE%E7%89%8719.png?raw=true)  
       
 总结一下，目前TVM的架构是：  
 1. 最高层级支持主流的深度学习前端框架，包括TensorFlow,MXNet,Pytorch等。  
@@ -82,9 +82,9 @@ Halide于2012年提出，主要用于自动优化。其嵌入到C++中，是MIT�
 Algorithm部分主要是算法描述和计算的数学表达式。
 Schedule部分则是告诉机器什么时候分配内存，如何计算（分块计算还是顺序计算）——目前已经提供了一些调度策略。  
     
-![图片17.png](https://github.com/Steve-Selite/AutoKernal/blob/main/Picture/Article%20One/%E5%9B%BE%E7%89%8717.png?raw=true)   
+![图片17.png](https://github.com/Steve-Selite/autokernel-docs/blob/main/Images/Compiler/%E5%9B%BE%E7%89%8717.png?raw=true)   
      
-![图片18.png](https://github.com/Steve-Selite/AutoKernal/blob/main/Picture/Article%20One/%E5%9B%BE%E7%89%8718.png?raw=true)  
+![图片18.png](https://github.com/Steve-Selite/autokernel-docs/blob/main/Images/Compiler/%E5%9B%BE%E7%89%8718.png?raw=true)  
 > _不同调度策略考虑重复冗余计算和局部性（locality)的权衡。_    
     
 ___
@@ -93,24 +93,24 @@ ___
 目前的高性能算子计算库主要是由高性能计算优化工程师进行手工开发。然而新的算法/硬件的不断涌现，导致了算子层级的优化开发工作量巨大。同时优化代码的工作并不是一件简单的事，它要求工程师既要精通计算机体系架构，又要熟悉算子的计算流程。  
 人才少，需求多，技术门槛高，因此我们认为算子优化自动化是未来的大趋势。而提出AutoKernel的初衷便是希望能把这个过程自动化，从小处入手，在算子层级的优化，实现优化代码的自动生成。  
       
-![图片11.png](https://github.com/Steve-Selite/AutoKernal/blob/main/Picture/Article%20One/%E5%9B%BE%E7%89%8711.png?raw=true)  
+![图片11.png](https://github.com/Steve-Selite/autokernel-docs/blob/main/Images/Compiler/%E5%9B%BE%E7%89%8711.png?raw=true)  
      
 AutoKernel的输入是算子的计算描述（如Conv、Poll、Fc），输出是经过优化的加速源码。  
 这一工具的开发旨在降低优化工作的门槛，不需要有底层汇编的知识门槛，不用手写优化汇编。可通过直接调用开发的工具包便可生成汇编代码。同时还提供了包含CPU、GPU的docker环境，无需部署开发环境，只需使用docker便可。还可通过提供的插件——plugin，可以把自动生成的算子一键集成到推理框架中——Tengine。  
       
-![图片12.png](https://github.com/Steve-Selite/AutoKernal/blob/main/Picture/Article%20One/%E5%9B%BE%E7%89%8712.png?raw=true)  
+![图片12.png](https://github.com/Steve-Selite/autokernel-docs/blob/main/Images/Compiler/%E5%9B%BE%E7%89%8712.png?raw=true)  
      
 对应地，算子层级的AutoKernel则主要分为三个模块，  
 1. Op Generator：算子生成器，采用了开源的Hallide。  
 2.  AutoSearch：目前还在开发中，目标是通过机器学习、强化学习常用算法自动搜索出优化策略。  
 3.  AutoKernel Plugin：把生成的自动算子以插件的形式插入到Tengine中，和人工定制互为补充。  
      
-![图片13.png](https://github.com/Steve-Selite/AutoKernal/blob/main/Picture/Article%20One/%E5%9B%BE%E7%89%8713.png?raw=true)    
+![图片13.png](https://github.com/Steve-Selite/autokernel-docs/blob/main/Images/Compiler/%E5%9B%BE%E7%89%8713.png?raw=true)    
 > _Tengine对象层对接了不同的神经网络模型，图层级的NNIR包含了模型解析、图层优化，算子层级则包括高性能计算库（HCL lib）。_    
      
 AutoKernel Plugin主要分为生成和部署两部分，生成部分用Hallid填写算法描述和调度策略，执行时指定后端类型（基本覆盖目前的主流后端）。  
 部署部分则封装为Tengine的库，直接调用。  
      
-![图片14.png](https://github.com/Steve-Selite/AutoKernal/blob/main/Picture/Article%20One/%E5%9B%BE%E7%89%8714.png?raw=true)    
+![图片14.png](https://github.com/Steve-Selite/autokernel-docs/blob/main/Images/Compiler/%E5%9B%BE%E7%89%8714.png?raw=true)    
       
 相信随着更多开发者的加入，AutoKernel社区会有更大的突破与成长，在未来的深度学习编译器领域中，留下浓重的一笔！  
