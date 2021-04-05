@@ -1,7 +1,7 @@
 # 架构  
   
   
-![AutoKernel 架构](Images/architecture.png)
+![AutoKernel 架构](../Images/architecture.png)
 
 AutoKernel分为三个模块：
 * 算子生成器: 
