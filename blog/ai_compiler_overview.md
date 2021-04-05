@@ -6,7 +6,7 @@
 3.  NLP（自然语言处理）：自动搜索引擎，对话服务机器人，文本分类，智能翻译等。  
 4.  科学研究：应用于物理、生物、医学等多研究领域。高能粒子对撞分类，宇宙天体图数据分析，星系形状建模，生物结构的蛋白质折叠预测，精准医疗与疾病预测。      
        
-![图片1.png](Images/Compiler/图片1.png)  
+![图片1.png](https://github.com/Steve-Selite/autokernel-docs/blob/main/Images/Compiler/%E5%9B%BE%E7%89%871.png?raw=ture)  
       
 这些应用催生更多的新模型出现：CNN, RNN, LSTM, GAN, GNN，也催生着如Tensorflow, Pytorch, Mxnet, Caffe等深度学习框架出现。目前训练框架开始收敛，逐步形成了PyTorch引领学术界，TensorFlow主导工业界的一个双雄局面。  
 
