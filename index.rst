@@ -48,7 +48,13 @@ Welcome to AutoKernel Docs!
   :caption: 教程Tutorials
   :name: sec-source-compile
 
-  tutorials/tutorial
+  tutorials/01_AutoKernel开发环境快速入门   
+  tutorials/02_Tengine快速入门          
+  tutorials/03_Halide初体验             
+  tutorials/04_AutoKernel插件指南             
+  tutorials/05_Halide调度策略Schedule                
+  tutorials/06_GEMM调度策略优化指南           
+  
 
 
 .. toctree::
